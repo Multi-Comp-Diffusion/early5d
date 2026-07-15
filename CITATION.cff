@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: >-
+  If you use early5d in your research and publish the results,
+  please cite the paper this software accompanies. A journal
+  article is in preparation; this entry will be updated when it
+  is available.
+type: software
+title: "early5d: early-stage analysis of the linearized multi-component Cahn-Hilliard equation"
+authors:
+  - family-names: Marschall
+    given-names: Niklas
+  - family-names: Darvishi Kamachali
+    given-names: Reza
+version: "0.1.0"
+date-released: "2026-07-15"
+license: MIT
+repository-code: "https://github.com/nmmatters/early5d"
+url: "https://github.com/nmmatters/early5d"
+keywords:
+  - high-entropy alloys
+  - spinodal decomposition
+  - Cahn-Hilliard
+  - CALPHAD
+  - materials science

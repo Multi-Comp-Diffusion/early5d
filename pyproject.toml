@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "early5d"
+version = "0.1.0"
+description = "Early-stage analysis of the linearized multi-component Cahn-Hilliard equation for high-entropy alloys"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Niklas Marschall" }]
+requires-python = ">=3.10"
+keywords = ["high-entropy alloys", "spinodal decomposition", "Cahn-Hilliard", "CALPHAD", "materials science", "HEA"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+ternary = ["python-ternary>=1.0.6"]
+dev = ["pytest", "pytest-cov"]
+
+[project.urls]
+Repository = "https://github.com/nmmatters/early5d"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["early5d*"]

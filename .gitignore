@@ -216,3 +216,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Raw CALPHAD / Thermo-Calc exports (proprietary, large — never commit)
+/data/*
+!/data/README.md
+*.dat
+!examples/data/*.dat
+
+# Generated example output
+examples/output/
+*.png
+!media/*.png
+*.npz
+
