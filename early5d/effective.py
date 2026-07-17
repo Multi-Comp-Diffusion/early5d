@@ -13,7 +13,7 @@ provable lower bound on the full eigenproblem-based CTLD
 
 import numpy as np
 
-from early5d import hessian
+from early5d import hessian, mobility
 from early5d.linalg import effective_projection
 
 
@@ -21,6 +21,28 @@ def effective_mobility(M, thermo_mode):
     """``M_eff = v0^T M v0`` (Eq. 15): the mobility matrix's Rayleigh quotient
     along the thermo mode."""
     return effective_projection(thermo_mode, M)
+
+
+def effective_mobility_ratio(M, thermo_mode, M_eff=None):
+    """``M_eff / lambda_1(M)`` -- how much of the mobility matrix's maximum
+    possible Rayleigh quotient (its largest eigenvalue) the thermo mode
+    actually captures.
+
+    ``M_eff`` is bounded above by ``lambda_1(M)``, with equality only if the
+    thermo mode coincides with the mobility matrix's own dominant eigenvector
+    (:func:`early5d.mobility.dominant_mode`). A small ratio means the
+    thermo-unstable direction is poorly aligned with where the mobility
+    matrix actually favors transport -- together with ``M``'s own anisotropy
+    (:func:`early5d.mobility.eigenvalue_gap`), this is a major additional
+    (non-gauge) reason ``tau_eff`` underestimates ``tau``: even a modest
+    misalignment costs much more of the "mobility budget" when that budget
+    is concentrated in one direction (large eigenvalue gap) than when it is
+    spread out evenly.
+    """
+    if M_eff is None:
+        M_eff = effective_mobility(M, thermo_mode)
+    lambda_1 = mobility.eigvalsh_descending(M)[0]
+    return M_eff / lambda_1
 
 
 def effective_gradient_energy(M, kappa, thermo_mode, M_eff=None):
@@ -56,7 +78,8 @@ def solve_effective_dispersion(Hg, M, kappa, n_k=1000):
     Projects onto the eigenvector of the untransformed Hessian
     (:func:`early5d.hessian.raw_thermo_mode`), which is what makes the
     algebraic reduction ``Hg v0 = xi0 v0`` exact. Returns a dict with
-    ``M_eff``, ``kappa_eff``, ``tau_eff``, the effective dispersion relation
+    ``M_eff``, ``kappa_eff``, ``tau_eff``, ``mobility_ratio``
+    (:func:`effective_mobility_ratio`), the effective dispersion relation
     (``wavenumbers``, ``growth_rates``), and ``k_critical``/``k_fastest``.
     """
     thermo_mode, xi0 = hessian.raw_thermo_mode(Hg)
@@ -68,6 +91,7 @@ def solve_effective_dispersion(Hg, M, kappa, n_k=1000):
 
     return {
         "M_eff": M_eff, "kappa_eff": kappa_eff,
+        "mobility_ratio": effective_mobility_ratio(M, thermo_mode, M_eff),
         "wavenumbers": wavenumbers, "growth_rates": growth_rates,
         "k_critical": k_critical, "k_fastest": k_fastest,
         "tau_eff": effective_ctld(xi0, M_eff, kappa_eff),

@@ -54,3 +54,20 @@ def dominant_mode(M):
     direction of fastest atomic transport (the "mobility mode" of Fig. 4)."""
     eigenvalues, eigenvectors = np.linalg.eigh(M)
     return eigenvectors[:, -1], eigenvalues[-1]
+
+
+def eigvalsh_descending(M):
+    """The mobility matrix's full eigenvalue spectrum, descending (largest
+    first, matching :func:`dominant_mode`'s own eigenvalue as element 0)."""
+    return np.linalg.eigvalsh(M)[::-1]
+
+
+def eigenvalue_gap(M):
+    """Relative gap ``(lambda_1 - lambda_2) / lambda_1`` between the mobility
+    matrix's two largest eigenvalues -- how well-separated (and hence how
+    robustly defined) :func:`dominant_mode` is from the next-fastest
+    transport direction. A small gap means the "dominant" mode is close to
+    degenerate with another direction and is thus more sensitive to small
+    perturbations of the composition or mobility data."""
+    lambda_1, lambda_2 = eigvalsh_descending(M)[:2]
+    return float((lambda_1 - lambda_2) / lambda_1)

@@ -157,13 +157,14 @@ needs its own orthogonalization matrix derived the same way (see
 The full 1 at % composition grid used in the paper (~4.6M rows, ~750 MB) is
 **not** committed to this repository (same policy as `phase5d`: raw CALPHAD
 exports are large, regenerable from Thermo-Calc, and not suited to git).
-Instead, [`examples/data/`](examples/data/) ships two small, real extracts
+Instead, [`examples/data/`](examples/data/) ships three small, real extracts
 from that grid for the Fe–Mn–Ni–Co–Cu system at 873 K:
 
 | File | Content | Used by |
 |---|---|---|
 | `tchea4_mobfe5_873k_alloy_stencils.dat` | The two worked alloys (Fe20Mn10Ni20Co20Cu30, Fe15Mn20Ni20Co15Cu30) plus their 8 axis-neighbor grid points each (the finite-difference stencil needed for an exact local Hessian) | `02`–`05` |
 | `tchea4_mobfe5_873k_coarse5pct.dat` | A 5 at % subsample of the full grid (~9700 points, still real CALPHAD data, just coarser than the paper's 1 at % maps) | `06` |
+| `tchea4_mobfe5_873k_equilibrium_phases.dat` | The four equilibrium tie-line endpoint compositions for both worked alloys (`PHASE_A`/`PHASE_B_GRID`, `PHASE_A2`/`PHASE_B2`; Table 2 of Marschall, Murugan & Darvishi Kamachali, *Materialia* 44 (2025) 102546), single exact rows — no finite-difference neighbors needed for the mobility matrix | `12` |
 
 To reproduce the paper's exact 1 at % composition maps, point
 `calphad.load_calphad_table` at your own full-resolution Thermo-Calc export
@@ -187,6 +188,8 @@ See the [`examples/`](examples/) directory:
 | [`08_pairwise_ternary_maps.py`](examples/08_pairwise_ternary_maps.py) | Figs. 1/2, generalized — a ternary map of a chosen early-stage parameter for every 20:20 at % species pair, via [`early5d.ternary_workflow`](early5d/ternary_workflow.py) |
 | [`09_reference_gauge_sensitivity.py`](examples/09_reference_gauge_sensitivity.py) | Sec. 4 discussion — sensitivity of `M_eff`/`kappa_eff`/`tau_eff` to the choice of reference species, via [`early5d.gauge_sensitivity`](early5d/gauge_sensitivity.py) |
 | [`10_composition_sweep_data.py`](examples/10_composition_sweep_data.py) | Every early-stage parameter (and its reference-species sensitivity) over the whole composition grid, saved as a `.npz` data file via [`early5d.composition_sweep`](early5d/composition_sweep.py) |
+| [`11_ctld_correlation.py`](examples/11_ctld_correlation.py) | CTLD-vs-effective-CTLD correlation scatter (log-log, 1:1 line), for every reference-species choice |
+| [`12_equilibrium_mobility_modes.py`](examples/12_equilibrium_mobility_modes.py) | Fig. 4, extended — dominant mobility eigenmode compared across each worked alloy's nominal and equilibrium phase compositions, via [`early5d.equilibrium_mobility`](early5d/equilibrium_mobility.py) |
 
 Run from the repository root:
 
@@ -259,6 +262,30 @@ sweep = composition_sweep.load_sweep("examples/output/composition_sweep.npz")
 sweep["tau_eff"]                # (P,) at the paper's own reference species
 sweep["tau_eff_by_reference"]   # (P, 5): same, recomputed per reference_species entry
 sweep["reference_species"]      # ["Fe", "Mn", "Ni", "Co", "Cu"]
+```
+
+`11_ctld_correlation.py` reproduces the manuscript's original CTLD-vs-
+effective-CTLD scatter (log-log, with a 1:1 reference line) across the whole
+composition space, generalized to show all five reference-species choices at
+once instead of just the paper's own (Fe) convention. Reuses `10`'s saved
+sweep if present (fast); otherwise runs it fresh (slow, see `10`'s note):
+
+```bash
+python examples/11_ctld_correlation.py
+```
+
+`12_equilibrium_mobility_modes.py` evaluates the dominant mobility eigenmode
+(the fastest-diffusing direction) not just at the nominal (parent) alloy
+composition, as example `03` does, but separately at each of its two
+coexisting equilibrium phase compositions, for both worked alloys — the
+mobility matrix needs no finite-difference stencil, just the exact
+composition, so this works directly on the small bundled
+`equilibrium_phases` extract. Also reports each composition's mobility-matrix
+eigenvalue gap (`early5d.mobility.eigenvalue_gap`) — how well-separated the
+dominant mode is from the next-fastest transport direction:
+
+```bash
+python examples/12_equilibrium_mobility_modes.py
 ```
 
 ---

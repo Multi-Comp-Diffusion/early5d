@@ -131,3 +131,30 @@ def test_reference_sensitivity_kappa_eff_is_gauge_invariant():
     )
     for species, values in results.items():
         assert values["kappa_eff"] == pytest.approx(kappa_scalar, rel=1e-9)
+
+
+def test_reference_sensitivity_includes_bounded_mobility_ratio():
+    """mobility_ratio = M_eff / lambda_1(M) in [0, 1] for every reference choice --
+    the frame-specific thermo mode can capture at most all of M's largest eigenvalue."""
+    center = np.array([0.10, 0.20, 0.20, 0.30])
+    grid_spacing = 0.01
+    A = np.array([[-2.0, 0.1, 0.0, 0.0],
+                  [0.1, 1.0, 0.0, 0.0],
+                  [0.0, 0.0, 1.5, 0.0],
+                  [0.0, 0.0, 0.0, 1.0]])
+
+    def mu_fn(x):
+        return A @ np.asarray(x)
+
+    def mobility_fn(x, species):
+        return 1.0 + 0.1 * FULL_SPECIES.index(species)
+
+    df = _stencil_table(center, grid_spacing, mu_fn, mobility_fn)
+    kappa_scalar = 0.05
+
+    results = gauge_sensitivity.reference_sensitivity(
+        df, center, kappa_scalar, ELEMENTS, FULL_SPECIES, grid_spacing,
+    )
+    for species, values in results.items():
+        assert "mobility_ratio" in values
+        assert 0.0 <= values["mobility_ratio"] <= 1.0 + 1e-9

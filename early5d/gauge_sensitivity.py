@@ -82,9 +82,15 @@ def reference_sensitivity(df, composition, kappa_scalar, elements, full_species,
     matching the manuscript's convention (see the module docstring).
 
     Returns a dict keyed by species name (the original reference and every
-    element), each entry ``{"M_eff", "kappa_eff", "tau_eff", "tau"}``. The
-    entry for ``full_species[0]`` (the original reference) is the quantity
-    actually reported in the paper; the others quantify its gauge-dependence.
+    element), each entry ``{"M_eff", "kappa_eff", "tau_eff", "tau",
+    "mobility_ratio"}``. The entry for ``full_species[0]`` (the original
+    reference) is the quantity actually reported in the paper; the others
+    quantify its gauge-dependence. ``mobility_ratio`` is
+    :func:`early5d.effective.effective_mobility_ratio` -- how much of that
+    frame's mobility matrix's maximum eigenvalue the (frame-specific) thermo
+    mode actually captures; together with the mobility matrix's own
+    anisotropy, this is a major additional (non-gauge) reason ``tau_eff``
+    underestimates ``tau``.
     """
     elements = list(elements)
     old_reference = full_species[0]
@@ -99,7 +105,10 @@ def reference_sensitivity(df, composition, kappa_scalar, elements, full_species,
     def summarize(Hg_frame, M_frame, kappa_frame):
         eff = effective.solve_effective_dispersion(Hg_frame, M_frame, kappa_frame, n_k=n_k)
         tau = kinetics.ctld(Hg_frame, M_frame, kappa_frame, n_k=n_k)
-        return {"M_eff": eff["M_eff"], "kappa_eff": eff["kappa_eff"], "tau_eff": eff["tau_eff"], "tau": tau}
+        return {
+            "M_eff": eff["M_eff"], "kappa_eff": eff["kappa_eff"], "tau_eff": eff["tau_eff"],
+            "tau": tau, "mobility_ratio": eff["mobility_ratio"],
+        }
 
     results = {old_reference: summarize(Hg, M, kappa)}
     for new_ref in elements:

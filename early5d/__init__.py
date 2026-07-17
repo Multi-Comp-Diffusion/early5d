@@ -6,15 +6,16 @@ Stages" (2026, in preparation).
 """
 
 from early5d import (
-    calphad, composition_sweep, effective, gauge_sensitivity, hessian, kinetics,
-    labels, linalg, misalignment, mobility, plotting, stats, ternary_workflow, workflow,
+    calphad, composition_sweep, effective, equilibrium_mobility, gauge_sensitivity,
+    hessian, kinetics, labels, linalg, misalignment, mobility, plotting, stats,
+    ternary_workflow, workflow,
 )
 
 __version__ = "0.1.0"
 
 __all__ = [
-    "calphad", "composition_sweep", "effective", "gauge_sensitivity", "hessian",
-    "kinetics", "labels", "linalg", "misalignment", "mobility", "plotting", "stats",
+    "calphad", "composition_sweep", "effective", "equilibrium_mobility", "gauge_sensitivity",
+    "hessian", "kinetics", "labels", "linalg", "misalignment", "mobility", "plotting", "stats",
     "ternary_workflow", "workflow", "cite",
 ]
 

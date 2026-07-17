@@ -15,6 +15,12 @@ identity whenever kappa = kappa_scalar * I, true for any v0), and the
 provable bound tau_eff <= tau holds for every reference choice -- the
 property that actually matters for using tau_eff as a safe, cheap
 high-throughput screening estimate is unaffected by this gauge-dependence.
+
+Also printed: mobility_ratio = M_eff / lambda_1(M) (how much of the mobility
+matrix's largest eigenvalue v0 actually captures, in that reference frame) --
+besides the gauge-dependence itself, this is a major reason tau_eff
+underestimates tau, and why that gap's *size* differs between reference
+choices (and between alloys).
 """
 
 import os
@@ -40,7 +46,8 @@ def analyse(alloy, df, index, decimals):
         r = results[species]
         used = " (paper's convention)" if species == "Fe" else ""
         print(f"  reference={species}: M_eff={r['M_eff']:.3e}  kappa_eff={r['kappa_eff']:.3e}  "
-              f"tau_eff={r['tau_eff']:.2f} s  tau={r['tau']:.2f} s{used}")
+              f"tau_eff={r['tau_eff']:.2f} s  tau={r['tau']:.2f} s  "
+              f"mobility_ratio={r['mobility_ratio']:.1%}{used}")
         assert r["tau_eff"] <= r["tau"] + 1e-9, "tau_eff <= tau bound violated"
 
     kappa_eff_values = [results[s]["kappa_eff"] for s in FULL_SPECIES]

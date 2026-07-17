@@ -14,7 +14,7 @@ matplotlib.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter, MaxNLocator, ScalarFormatter
+from matplotlib.ticker import FuncFormatter, LogLocator, MaxNLocator, NullFormatter, ScalarFormatter
 
 from early5d.misalignment import angle_between, gram_schmidt_plane, project_to_plane
 
@@ -86,6 +86,59 @@ def plot_dispersion(ax, wavenumbers, growth_rates, label=None, scale_k=1e-9, lin
     _style_axes(ax)
     if label:
         ax.legend(frameon=False, fontsize=LEGEND_FONTSIZE)
+    return ax
+
+
+def _style_log_axes(ax, n_ticks=5):
+    """Log-log scatter styling: heavy inward ticks and scientific notation as
+    ``$10^{n}$`` -- like :func:`_style_axes`, but using a ``LogLocator``/
+    ``FuncFormatter`` pair suited to log axes instead of ``_style_axes``'s
+    ``ScalarFormatter`` (meant for linear axes with occasional large values).
+    """
+    for spine in ax.spines.values():
+        spine.set_linewidth(2.0)
+    ax.tick_params(direction="in", length=4, width=1, which="major", top=True, right=True, labelsize=FONTSIZE)
+    ax.tick_params(direction="in", length=3, width=0.8, which="minor", top=True, right=True)
+    ax.xaxis.label.set_fontsize(FONTSIZE)
+    ax.yaxis.label.set_fontsize(FONTSIZE)
+
+    formatter = FuncFormatter(lambda x, pos: rf"$10^{{{int(round(np.log10(x)))}}}$" if x > 0 else "")
+    for axis in (ax.xaxis, ax.yaxis):
+        axis.set_major_locator(LogLocator(base=10, numticks=n_ticks))
+        axis.set_major_formatter(formatter)
+        axis.set_minor_locator(LogLocator(base=10, subs="auto", numticks=n_ticks * 2))
+        axis.set_minor_formatter(NullFormatter())
+    return ax
+
+
+def plot_ctld_correlation(ax, tau_eff, tau, label=None, color=None, marker_size=6, alpha=0.3):
+    """Scatter ``tau_eff`` (x) against ``tau`` (y) on log-log axes -- the
+    CTLD-vs-effective-CTLD correlation plot from the manuscript's original
+    analysis, generalized here to accept one series per reference-species
+    choice (see :func:`plot_ctld_reference_line` for the accompanying 1:1
+    line, and ``examples/11_ctld_correlation.py`` for a full example).
+    """
+    tau_eff, tau = np.asarray(tau_eff, dtype=float), np.asarray(tau, dtype=float)
+    finite = np.isfinite(tau_eff) & np.isfinite(tau) & (tau_eff > 0) & (tau > 0)
+    ax.scatter(tau_eff[finite], tau[finite], s=marker_size, alpha=alpha, label=label, color=color, edgecolors="none")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlabel(r"effective-CTLD $\tau_\mathrm{eff}$ (s)")
+    ax.set_ylabel(r"CTLD $\tau$ (s)")
+    _style_log_axes(ax)
+    return ax
+
+
+def plot_ctld_reference_line(ax, lo=None, hi=None, label=r"$\tau = \tau_\mathrm{eff}$"):
+    """1:1 reference line for :func:`plot_ctld_correlation`; defaults to
+    spanning the axes' current limits if ``lo``/``hi`` aren't given."""
+    if lo is None or hi is None:
+        xlim, ylim = ax.get_xlim(), ax.get_ylim()
+        lo = min(xlim[0], ylim[0]) if lo is None else lo
+        hi = max(xlim[1], ylim[1]) if hi is None else hi
+    ax.plot([lo, hi], [lo, hi], "k--", linewidth=1.5, label=label)
+    ax.set_xlim(lo, hi)
+    ax.set_ylim(lo, hi)
     return ax
 
 

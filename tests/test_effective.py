@@ -42,3 +42,38 @@ def test_effective_ctld_matches_definition():
     M_eff, xi0, kappa_eff = 2.0, -3.0, 0.1
     tau_eff = effective.effective_ctld(xi0, M_eff, kappa_eff)
     assert tau_eff == pytest.approx(4 * kappa_eff / (M_eff * xi0 ** 2))
+
+
+def test_effective_mobility_ratio_is_one_for_isotropic_mobility():
+    """Every vector is an eigenvector of an isotropic M with the same eigenvalue,
+    so M_eff == lambda_1(M) exactly, regardless of the thermo mode."""
+    M = 3.0 * np.eye(2)
+    thermo_mode = np.array([0.6, 0.8])  # arbitrary unit vector
+
+    ratio = effective.effective_mobility_ratio(M, thermo_mode)
+
+    assert ratio == pytest.approx(1.0)
+
+
+def test_effective_mobility_ratio_matches_manual_computation_for_anisotropic_mobility():
+    M = np.array([[1.0, 0.5], [0.5, 3.0]])
+    thermo_mode = np.array([1.0, 0.0])  # not aligned with M's dominant eigenvector
+
+    M_eff = effective.effective_mobility(M, thermo_mode)
+    lambda_1 = np.linalg.eigvalsh(M)[-1]
+    expected = M_eff / lambda_1
+
+    assert effective.effective_mobility_ratio(M, thermo_mode) == pytest.approx(expected)
+    assert 0.0 <= effective.effective_mobility_ratio(M, thermo_mode) <= 1.0 + 1e-12
+
+
+def test_solve_effective_dispersion_includes_mobility_ratio():
+    Hg = np.array([[-2.0, 0.6], [0.6, 1.0]])
+    M = np.array([[1.0, 0.5], [0.5, 3.0]])
+    kappa = 0.01 * np.eye(2)
+
+    eff = effective.solve_effective_dispersion(Hg, M, kappa, n_k=100)
+
+    expected = effective.effective_mobility_ratio(M, eff["thermo_mode"], eff["M_eff"])
+    assert eff["mobility_ratio"] == pytest.approx(expected)
+    assert 0.0 <= eff["mobility_ratio"] <= 1.0 + 1e-12
