@@ -35,7 +35,7 @@ from _common import (
 FULL_ELEMENTS = ["Fe", *ELEMENTS]
 # matplotlib's default mathtext doesn't support \bm (only real LaTeX + the bm
 # package does); \mathbf is the closest built-in equivalent for this figure
-PLOT_LABELS = [r"$\mathbf{X}_0$", r"$\mathbf{X}^\mathrm{FeCo}$", r"$\mathbf{X}^\mathrm{Cu}$"]
+PLOT_LABELS = [r"$\mathbf{X}_0$", r"$\mathbf{X}_\mathrm{FeCo}$", r"$\mathbf{X}_\mathrm{Cu}$"]
 
 
 def analyse(alloy, phase_a, phase_b, df, index, decimals):
@@ -51,11 +51,14 @@ def analyse(alloy, phase_a, phase_b, df, index, decimals):
         result["labels"], result["modes"], result["eigenvalues"], result["eigenvalue_gaps"]
     ):
         print(f"  {label}: {dict(zip(FULL_ELEMENTS, mode.round(3)))}")
-        print(f"    eigenvalues (m^2/s, descending) = {[f'{ev:.3e}' for ev in eigenvalues]}  "
+        print(f"    eigenvalues (mol m^2/(J s), descending) = {[f'{ev:.3e}' for ev in eigenvalues]}  "
               f"gap (lambda_1-lambda_2)/lambda_1 = {gap:.1%}")
 
     fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
-    plotting.plot_eigenmode_bars(ax, modes=result["modes"], labels=PLOT_LABELS, elements=FULL_ELEMENTS)
+    plotting.plot_eigenmode_bars(
+        ax, modes=result["modes"], labels=PLOT_LABELS, elements=FULL_ELEMENTS,
+        ylabel="normalized mobility mode", eigenvalues=result["eigenvalues"],
+    )
     fig.tight_layout()
     out_path = os.path.join(OUTPUT_DIR, f"equilibrium_mobility_modes_{alloy['label']}.png")
     fig.savefig(out_path, dpi=150)

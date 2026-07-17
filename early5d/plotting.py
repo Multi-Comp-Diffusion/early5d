@@ -142,22 +142,62 @@ def plot_ctld_reference_line(ax, lo=None, hi=None, label=r"$\tau = \tau_\mathrm{
     return ax
 
 
-def plot_eigenmode_bars(ax, modes, labels, elements, colors=None):
-    """Bar-shard comparison of normalized mode amplitudes across alloy components (Fig. 4)."""
+def plot_eigenmode_bars(ax, modes, labels, elements, colors=None,
+                         ylabel="normalized mode amplitude", eigenvalues=None):
+    """Bar-shard comparison of normalized mode amplitudes across alloy components (Fig. 4).
+
+    ``eigenvalues`` (optional, one array per mode, descending, as returned by
+    :func:`early5d.equilibrium_mobility.compare_mobility_modes`) adds a small
+    inset axes in the upper-right corner plotting each mode's dominant
+    eigenvalue (``eigenvalues[i][0]``) as a marker, connected by a dashed
+    line. It is a genuinely separate nested axes with its own (log-scaled)
+    y-axis rather than an overlay on the bar axis, since the eigenvalue's
+    units/scale (mol m^2 J^-1 s^-1, spanning decades -- the raw mobility
+    matrix's own units, not the m^2/s of an M*Hg-type diffusivity) have
+    nothing in common with the dimensionless bar heights, and it has no
+    natural x-position among the per-*element* bar groups (it is one scalar
+    per *mode*, not per element).
+    """
     x = np.arange(len(elements))
     n_modes = len(modes)
     width = 0.8 / n_modes
+    if colors is None:
+        cycle = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+        colors = [cycle[i % len(cycle)] for i in range(n_modes)]
     for i, (mode, label) in enumerate(zip(modes, labels)):
         offset = (i - (n_modes - 1) / 2) * width
-        color = colors[i] if colors is not None else None
-        ax.bar(x + offset, mode, width=width, label=label, color=color)
+        ax.bar(x + offset, mode, width=width, label=label, color=colors[i])
     ax.axhline(0, lw=1, color="k")
-    ax.set_ylabel("normalized mode amplitude")
+    ax.set_ylabel(ylabel)
     _style_axes(ax, x_ticks=False)  # categorical x-axis: keep element names, not a numeric locator
     ax.set_xticks(x)
     ax.set_xticklabels(elements)
     ax.legend(frameon=False, loc="upper left", fontsize=LEGEND_FONTSIZE)
+
+    if eigenvalues is not None:
+        _eigenvalue_inset(ax, eigenvalues, labels, colors)
     return ax
+
+
+def _eigenvalue_inset(ax, eigenvalues, labels, colors):
+    """Small nested axes (upper-right corner of ``ax``) plotting each mode's
+    dominant eigenvalue (``eigenvalues[i][0]``, descending order) as a
+    marker connected by a dashed line, on its own log-scaled y-axis."""
+    lambda_1 = [np.asarray(ev)[0] for ev in eigenvalues]
+    xpos = np.arange(len(lambda_1))
+
+    inset = ax.inset_axes([0.55, 0.60, 0.42, 0.36])  # same upper-right anchor, ~20% larger
+    inset.plot(xpos, lambda_1, "--", color="gray", linewidth=1.2, zorder=1)
+    inset.scatter(xpos, lambda_1, color=colors[:len(lambda_1)], edgecolors="k", linewidth=0.8, zorder=2, s=25)
+    inset.set_yscale("log")
+    inset.set_xlim(-0.5, len(lambda_1) - 0.5)
+    inset.set_xticks(xpos)
+    inset.set_xticklabels(labels, fontsize=8)
+    inset.set_ylabel(r"$m_\mathrm{max}$ (mol m$^2$/(J s))", fontsize=9, labelpad=2)
+    inset.tick_params(labelsize=8, direction="in", length=3, which="both")
+    for spine in inset.spines.values():
+        spine.set_linewidth(1.2)
+    return inset
 
 
 def plot_reference_sensitivity(ax, species, values, highlight_species=None, ylabel=None,
