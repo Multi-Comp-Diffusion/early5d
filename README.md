@@ -2,24 +2,23 @@
 
 [![Tests](https://github.com/nmmatters/early5d/actions/workflows/tests.yml/badge.svg)](https://github.com/nmmatters/early5d/actions/workflows/tests.yml)
 
-**Early-stage analysis of the linearized multi-component Cahn–Hilliard equation for high-entropy alloys.**
+**Phase stability analysis in complex High Entropy Alloys**
 
-`early5d` computes the thermo-kinetic eigenproblem that governs the earliest
-stage of spinodal decomposition in a multi-component alloy, starting directly
-from CALPHAD thermodynamic and mobility data. Given a Thermo-Calc export
-(Gibbs energy derivatives + atomic mobilities on a composition grid), it
-builds the Gibbs-energy Hessian and the Onsager mobility matrix, solves the
-thermo-kinetic growth operator, and reports the dispersion relation, the
-characteristic time of linear decomposition (CTLD), and the misalignment
-between thermodynamic driving forces and kinetic transport pathways.
+`early5d` computes and analyzes the thermo-kinetic eigenproblem that governs the earliest
+stage of spinodal decomposition in a multi-component alloy. Early-stage analysis of the linearized 
+multi-component Cahn–Hilliard are performed. Starting directly
+from CALPHAD thermodynamic and mobility data (Gibbs energy derivatives + 
+atomic mobilities on a composition grid), it builds the Gibbs-energy Hessian 
+and the Onsager mobility matrix, solves the thermo-kinetic growth operator, 
+and reports the dispersion relation, the characteristic time of linear 
+decomposition (CTLD), and the misalignment between thermodynamic 
+driving forces and kinetic transport pathways.
 
-This is the companion code for:
+Please see details in and cite:
 
-> N. Marschall, R. Darvishi Kamachali, *Why High-Entropy Alloys May Decompose
-> Slower: Misalignment of Early-Pathways and Equilibrium Stages* (2026, in
-> preparation).
+N. Marschall, R. Darvishi Kamachali, *Why High-Entropy Alloys May Decompose Slower: Misalignment of Early-Pathways and Equilibrium Stages* (2026, in preparation).
 
-It sits alongside [`phase5d`](https://github.com/nmmatters/phase5d) (5D
+This development sits alongside [`phase5d`](https://github.com/nmmatters/phase5d) (5D
 phase-diagram visualization), which handles the equilibrium/phase-stability
 side of the same CALPHAD datasets.
 
