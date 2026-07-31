@@ -186,7 +186,7 @@ See the [`examples/`](examples/) directory:
 | [`06_ctld_composition_maps.py`](examples/06_ctld_composition_maps.py) | Figs. 1/2 — CTLD and effective-CTLD mapped across the composition simplex, plotted as ternary cross-sections |
 | [`07_full_composition_workflow.py`](examples/07_full_composition_workflow.py) | Figs. 3, 4, 5, 7 for one composition in a single run, via [`early5d.workflow.analyze_composition`](early5d/workflow.py) |
 | [`08_pairwise_ternary_maps.py`](examples/08_pairwise_ternary_maps.py) | Figs. 1/2, generalized — a ternary map of a chosen early-stage parameter for every 20:20 at % species pair, via [`early5d.ternary_workflow`](early5d/ternary_workflow.py) |
-| [`09_reference_gauge_sensitivity.py`](examples/09_reference_gauge_sensitivity.py) | Sec. 4 discussion — sensitivity of `M_eff`/`kappa_eff`/`tau_eff` to the choice of reference species, via [`early5d.gauge_sensitivity`](early5d/gauge_sensitivity.py) |
+| [`09_reference_gauge_sensitivity.py`](examples/09_reference_gauge_sensitivity.py) | Sec. 4 discussion — sensitivity of `M_eff`/`kappa_eff`/`tau_eff` (and `mobility_ratio = M_eff / lambda_1(M)`) to the choice of reference species, via [`early5d.gauge_sensitivity`](early5d/gauge_sensitivity.py) |
 | [`10_composition_sweep_data.py`](examples/10_composition_sweep_data.py) | Every early-stage parameter (and its reference-species sensitivity) over the whole composition grid, saved as a `.npz` data file via [`early5d.composition_sweep`](early5d/composition_sweep.py) |
 | [`11_ctld_correlation.py`](examples/11_ctld_correlation.py) | CTLD-vs-effective-CTLD correlation scatter (log-log, 1:1 line), for every reference-species choice |
 | [`12_equilibrium_mobility_modes.py`](examples/12_equilibrium_mobility_modes.py) | Fig. 4, extended — dominant mobility eigenmode compared across each worked alloy's nominal and equilibrium phase compositions, via [`early5d.equilibrium_mobility`](early5d/equilibrium_mobility.py) |
@@ -238,7 +238,11 @@ checks printed to console: `kappa_eff` is exactly unchanged regardless of
 reference (an algebraic identity whenever `kappa = kappa_scalar * I`), and
 the `tau_eff <= tau` bound — the property that actually matters for using
 `tau_eff` as a safe screening estimate — holds for every reference choice
-tested:
+tested. Also prints `mobility_ratio = M_eff / lambda_1(M)`
+(`early5d.effective.effective_mobility_ratio`) for every reference choice —
+how much of the mobility matrix's largest eigenvalue the reference-frame's
+thermo mode actually captures, a major additional (non-gauge) reason
+`tau_eff` underestimates `tau`:
 
 ```bash
 python examples/09_reference_gauge_sensitivity.py
