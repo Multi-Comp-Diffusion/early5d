@@ -14,6 +14,8 @@ from early5d import calphad, linalg, mobility
 
 
 def _mobility_matrix_at(df, composition, elements, index, decimals):
+    """Onsager mobility matrix (Eq. 4) at a single composition -- no finite-difference
+    neighbors needed, unlike the Hessian (see the module docstring)."""
     mobilities = calphad.atomic_mobilities(df, composition, elements, index, decimals)
     return mobility.mobility_matrix(mobilities, calphad.full_composition(composition))
 
