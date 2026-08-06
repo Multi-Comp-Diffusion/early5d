@@ -13,7 +13,7 @@ modes than they are from each other), but exact angle values will differ
 slightly from the paper's.
 
 The equilibrium tie-line composition is an external input -- see
-``examples/_common.py`` and the README's Scope section.
+``analysis/_common.py`` and the README's Scope section.
 """
 
 import os

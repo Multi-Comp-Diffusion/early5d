@@ -1,7 +1,7 @@
 """Full per-composition workflow: every Sec. 2.1-2.4 analysis for one alloy,
 in a single run (Figs. 3, 4, 5, 7).
 
-Consolidates what examples/02-05 do separately -- dispersion relation,
+Consolidates what analysis/02-05 do separately -- dispersion relation,
 eigenmode bar-shards, misalignment angles, anisotropic Cu gradient-energy
 sweep -- behind one call to :func:`early5d.workflow.analyze_composition`, so
 exploring a single composition doesn't require re-deriving the Hessian/

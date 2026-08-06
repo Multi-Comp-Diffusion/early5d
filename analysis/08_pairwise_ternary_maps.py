@@ -18,7 +18,7 @@ Each panel's remaining (varying) three species are placed top/right/left in
 their relative order within ``[Fe, Mn, Ni, Co, Cu]`` (skipping the two fixed
 ones) -- a fixed, consistent convention across all ten panels, rather than
 the per-panel hand-tuned corner arrangement used for the single Fe/Co panel
-in examples/06_ctld_composition_maps.py.
+in analysis/06_ctld_composition_maps.py.
 
 Requires the optional python-ternary dependency: pip install -e ".[ternary]"
 """

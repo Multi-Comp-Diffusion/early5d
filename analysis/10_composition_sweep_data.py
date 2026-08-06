@@ -13,7 +13,7 @@ alongside) a figure, for downstream analysis/plotting outside this repo.
 This pays a real cost: a reference-sensitivity sweep is ~6x a single-field
 scan (one direct computation, plus one recomputation per candidate reference
 species), on top of already being the more expensive multi-field version of
-what examples/06 and 08 do -- expect several minutes on the bundled coarse
+what analysis/06 and 08 do -- expect several minutes on the bundled coarse
 grid.
 
     python 10_composition_sweep_data.py
@@ -21,7 +21,7 @@ grid.
 Loading the result back:
 
     from early5d import composition_sweep
-    sweep = composition_sweep.load_sweep("examples/output/composition_sweep.npz")
+    sweep = composition_sweep.load_sweep("analysis/output/composition_sweep.npz")
     sweep["tau_eff"]                  # (P,) at the paper's own reference species
     sweep["tau_eff_by_reference"]     # (P, 5): same, recomputed per reference_species entry
     sweep["reference_species"]       # ["Fe", "Mn", "Ni", "Co", "Cu"]

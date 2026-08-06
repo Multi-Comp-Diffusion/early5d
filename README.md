@@ -96,7 +96,7 @@ import numpy as np
 from early5d import calphad, hessian, mobility, kinetics, effective
 
 # 1. Load a CALPHAD export (Thermo-Calc TCHEA4/MOBFE5 style, see Data format)
-df = calphad.load_calphad_table("examples/data/tchea4_mobfe5_873k_alloy_stencils.dat")
+df = calphad.load_calphad_table("data/tchea4_mobfe5_873k_alloy_stencils.dat")
 elements = ["Mn", "Ni", "Co", "Cu"]  # independent components; Fe is the implicit reference
 index, decimals = calphad.build_index(df, elements)
 
@@ -121,7 +121,7 @@ eff = effective.solve_effective_dispersion(Hg, M, kappa, n_k=1000)
 print(f"effective-CTLD: {eff['tau_eff']:.2f} s   (<= CTLD: {eff['tau_eff'] <= result['tau']})")
 ```
 
-See [`examples/`](examples/) for full, runnable scripts that reproduce the
+See [`analysis/`](analysis/) for full, runnable scripts that reproduce the
 key figures of the paper.
 
 ---
@@ -151,13 +151,14 @@ orthogonalizing against a mismatched basis, and a different-sized system
 needs its own orthogonalization matrix derived the same way (see
 `early5d/hessian.py`'s module docstring).
 
-### Bundled example data
+### Bundled analysis data
 
 The full 1 at % composition grid used in the paper (~4.6M rows, ~750 MB) is
 **not** committed to this repository (same policy as `phase5d`: raw CALPHAD
 exports are large, regenerable from Thermo-Calc, and not suited to git).
-Instead, [`examples/data/`](examples/data/) ships three small, real extracts
-from that grid for the Fe–Mn–Ni–Co–Cu system at 873 K:
+Instead, [`data/`](data/) ships three small, real extracts from that grid for
+the Fe–Mn–Ni–Co–Cu system at 873 K (and doubles as the place to drop your own
+full-resolution export — see [`data/README.md`](data/README.md)):
 
 | File | Content | Used by |
 |---|---|---|
@@ -171,31 +172,31 @@ To reproduce the paper's exact 1 at % composition maps, point
 
 ---
 
-## Examples
+## Analysis scripts
 
-See the [`examples/`](examples/) directory:
+See the [`analysis/`](analysis/) directory:
 
 | File | Reproduces |
 |------|------------|
-| [`01_hessian_and_spinodal.py`](examples/01_hessian_and_spinodal.py) | Gibbs-energy Hessian, gauge-invariant orthogonalization, spinodal sign test |
-| [`02_dispersion_relation.py`](examples/02_dispersion_relation.py) | Fig. 3 — eigenproblem-based vs. effective growth-rate dispersion and CTLD |
-| [`03_eigenmode_bar_shards.py`](examples/03_eigenmode_bar_shards.py) | Fig. 4 — thermo / mobility / growth / equilibrium mode comparison |
-| [`04_misalignment_angles.py`](examples/04_misalignment_angles.py) | Fig. 5 — mobility-weighted misalignment angles between thermo, growth, and equilibrium modes |
-| [`05_anisotropic_gradient_energy.py`](examples/05_anisotropic_gradient_energy.py) | Fig. 7 — sensitivity of the dispersion relation to an anisotropic gradient-energy coefficient |
-| [`06_ctld_composition_maps.py`](examples/06_ctld_composition_maps.py) | Figs. 1/2 — CTLD and effective-CTLD mapped across the composition simplex, plotted as ternary cross-sections |
-| [`07_full_composition_workflow.py`](examples/07_full_composition_workflow.py) | Figs. 3, 4, 5, 7 for one composition in a single run, via [`early5d.workflow.analyze_composition`](early5d/workflow.py) |
-| [`08_pairwise_ternary_maps.py`](examples/08_pairwise_ternary_maps.py) | Figs. 1/2, generalized — a ternary map of a chosen early-stage parameter for every 20:20 at % species pair, via [`early5d.ternary_workflow`](early5d/ternary_workflow.py) |
-| [`09_reference_gauge_sensitivity.py`](examples/09_reference_gauge_sensitivity.py) | Sec. 4 discussion — sensitivity of `M_eff`/`kappa_eff`/`tau_eff` (and `mobility_ratio = M_eff / lambda_1(M)`) to the choice of reference species, via [`early5d.gauge_sensitivity`](early5d/gauge_sensitivity.py) |
-| [`10_composition_sweep_data.py`](examples/10_composition_sweep_data.py) | Every early-stage parameter (and its reference-species sensitivity) over the whole composition grid, saved as a `.npz` data file via [`early5d.composition_sweep`](early5d/composition_sweep.py) |
-| [`11_ctld_correlation.py`](examples/11_ctld_correlation.py) | CTLD-vs-effective-CTLD correlation scatter (log-log, 1:1 line), for every reference-species choice |
-| [`12_equilibrium_mobility_modes.py`](examples/12_equilibrium_mobility_modes.py) | Fig. 4, extended — dominant mobility eigenmode compared across each worked alloy's nominal and equilibrium phase compositions, via [`early5d.equilibrium_mobility`](early5d/equilibrium_mobility.py) |
+| [`01_hessian_and_spinodal.py`](analysis/01_hessian_and_spinodal.py) | Gibbs-energy Hessian, gauge-invariant orthogonalization, spinodal sign test |
+| [`02_dispersion_relation.py`](analysis/02_dispersion_relation.py) | Fig. 3 — eigenproblem-based vs. effective growth-rate dispersion and CTLD |
+| [`03_eigenmode_bar_shards.py`](analysis/03_eigenmode_bar_shards.py) | Fig. 4 — thermo / mobility / growth / equilibrium mode comparison |
+| [`04_misalignment_angles.py`](analysis/04_misalignment_angles.py) | Fig. 5 — mobility-weighted misalignment angles between thermo, growth, and equilibrium modes |
+| [`05_anisotropic_gradient_energy.py`](analysis/05_anisotropic_gradient_energy.py) | Fig. 7 — sensitivity of the dispersion relation to an anisotropic gradient-energy coefficient |
+| [`06_ctld_composition_maps.py`](analysis/06_ctld_composition_maps.py) | Figs. 1/2 — CTLD and effective-CTLD mapped across the composition simplex, plotted as ternary cross-sections |
+| [`07_full_composition_workflow.py`](analysis/07_full_composition_workflow.py) | Figs. 3, 4, 5, 7 for one composition in a single run, via [`early5d.workflow.analyze_composition`](early5d/workflow.py) |
+| [`08_pairwise_ternary_maps.py`](analysis/08_pairwise_ternary_maps.py) | Figs. 1/2, generalized — a ternary map of a chosen early-stage parameter for every 20:20 at % species pair, via [`early5d.ternary_workflow`](early5d/ternary_workflow.py) |
+| [`09_reference_gauge_sensitivity.py`](analysis/09_reference_gauge_sensitivity.py) | Sec. 4 discussion — sensitivity of `M_eff`/`kappa_eff`/`tau_eff` (and `mobility_ratio = M_eff / lambda_1(M)`) to the choice of reference species, via [`early5d.gauge_sensitivity`](early5d/gauge_sensitivity.py) |
+| [`10_composition_sweep_data.py`](analysis/10_composition_sweep_data.py) | Every early-stage parameter (and its reference-species sensitivity) over the whole composition grid, saved as a `.npz` data file via [`early5d.composition_sweep`](early5d/composition_sweep.py) |
+| [`11_ctld_correlation.py`](analysis/11_ctld_correlation.py) | CTLD-vs-effective-CTLD correlation scatter (log-log, 1:1 line), for every reference-species choice |
+| [`12_equilibrium_mobility_modes.py`](analysis/12_equilibrium_mobility_modes.py) | Fig. 4, extended — dominant mobility eigenmode compared across each worked alloy's nominal and equilibrium phase compositions, via [`early5d.equilibrium_mobility`](early5d/equilibrium_mobility.py) |
 
 Run from the repository root:
 
 ```bash
-python examples/01_hessian_and_spinodal.py
-python examples/02_dispersion_relation.py
-python examples/06_ctld_composition_maps.py   # requires: pip install -e ".[ternary]"
+python analysis/01_hessian_and_spinodal.py
+python analysis/02_dispersion_relation.py
+python analysis/06_ctld_composition_maps.py   # requires: pip install -e ".[ternary]"
 ```
 
 `07_full_composition_workflow.py` runs everything relevant for one chosen
@@ -204,10 +205,10 @@ anisotropic sweep) instead of hardcoding one of the two worked alloys per
 script:
 
 ```bash
-python examples/07_full_composition_workflow.py                                                   # default: Fe20Mn10Ni20Co20Cu30
-python examples/07_full_composition_workflow.py --composition 0.20 0.20 0.15 0.30                  # the other worked alloy
-python examples/07_full_composition_workflow.py --composition 0.15 0.25 0.10 0.25 --dataset coarse # any composition, coarser grid
-python examples/07_full_composition_workflow.py --use-published-tie-line                           # also compute misalignment angles (Fig. 5)
+python analysis/07_full_composition_workflow.py                                                   # default: Fe20Mn10Ni20Co20Cu30
+python analysis/07_full_composition_workflow.py --composition 0.20 0.20 0.15 0.30                  # the other worked alloy
+python analysis/07_full_composition_workflow.py --composition 0.15 0.25 0.10 0.25 --dataset coarse # any composition, coarser grid
+python analysis/07_full_composition_workflow.py --use-published-tie-line                           # also compute misalignment angles (Fig. 5)
 ```
 
 See the script's docstring (`--help`) for the full set of options, including
@@ -221,10 +222,10 @@ a chosen early-stage parameter and produces a ternary map for every pair that
 has enough grid points (plus one shared colorbar):
 
 ```bash
-python examples/08_pairwise_ternary_maps.py                  # CTLD (tau), the default
-python examples/08_pairwise_ternary_maps.py --field tau_eff   # effective-CTLD
-python examples/08_pairwise_ternary_maps.py --field xi0       # thermodynamic driving force
-python examples/08_pairwise_ternary_maps.py --field k_max     # fastest-growing wavenumber
+python analysis/08_pairwise_ternary_maps.py                  # CTLD (tau), the default
+python analysis/08_pairwise_ternary_maps.py --field tau_eff   # effective-CTLD
+python analysis/08_pairwise_ternary_maps.py --field xi0       # thermodynamic driving force
+python analysis/08_pairwise_ternary_maps.py --field k_max     # fastest-growing wavenumber
 ```
 
 `09_reference_gauge_sensitivity.py` quantifies how much `M_eff`/`kappa_eff`/
@@ -244,7 +245,7 @@ thermo mode actually captures, a major additional (non-gauge) reason
 `tau_eff` underestimates `tau`:
 
 ```bash
-python examples/09_reference_gauge_sensitivity.py
+python analysis/09_reference_gauge_sensitivity.py
 ```
 
 `10_composition_sweep_data.py` runs the same reference-species sensitivity
@@ -256,12 +257,12 @@ than (only) a figure -- this one pays a real cost (~6x a single-field scan,
 expect several minutes on the bundled coarse grid):
 
 ```bash
-python examples/10_composition_sweep_data.py
+python analysis/10_composition_sweep_data.py
 ```
 
 ```python
 from early5d import composition_sweep
-sweep = composition_sweep.load_sweep("examples/output/composition_sweep.npz")
+sweep = composition_sweep.load_sweep("analysis/output/composition_sweep.npz")
 sweep["tau_eff"]                # (P,) at the paper's own reference species
 sweep["tau_eff_by_reference"]   # (P, 5): same, recomputed per reference_species entry
 sweep["reference_species"]      # ["Fe", "Mn", "Ni", "Co", "Cu"]
@@ -274,12 +275,12 @@ once instead of just the paper's own (Fe) convention. Reuses `10`'s saved
 sweep if present (fast); otherwise runs it fresh (slow, see `10`'s note):
 
 ```bash
-python examples/11_ctld_correlation.py
+python analysis/11_ctld_correlation.py
 ```
 
 `12_equilibrium_mobility_modes.py` evaluates the dominant mobility eigenmode
 (the fastest-diffusing direction) not just at the nominal (parent) alloy
-composition, as example `03` does, but separately at each of its two
+composition, as script `03` does, but separately at each of its two
 coexisting equilibrium phase compositions, for both worked alloys — the
 mobility matrix needs no finite-difference stencil, just the exact
 composition, so this works directly on the small bundled
@@ -288,7 +289,21 @@ eigenvalue gap (`early5d.mobility.eigenvalue_gap`) — how well-separated the
 dominant mode is from the next-fastest transport direction:
 
 ```bash
-python examples/12_equilibrium_mobility_modes.py
+python analysis/12_equilibrium_mobility_modes.py
+```
+
+---
+
+## Tests
+
+[`tests/`](tests/) is unrelated to the alloy system above — it unit-tests
+`early5d`'s own correctness (Hessian symmetry, gauge-invariance, the
+`tau_eff <= tau` bound, misalignment-angle bounds, etc.) against small
+synthetic data, and runs automatically in CI on every push:
+
+```bash
+pip install -e ".[dev]"
+pytest tests/
 ```
 
 ---
@@ -301,9 +316,10 @@ python examples/12_equilibrium_mobility_modes.py
 - Elastic/coherency-strain contributions to the Hessian (a separate paper,
   N. Marschall, J. Murugan, R. Darvishi Kamachali, *Materialia* 44 (2025) 102546).
 - A full nonlinear Cahn–Hilliard phase-field solver, or comparison to
-  TEM/APT microstructures (separate validation work).
+  TEM/APT microstructures (separate validation work) — see
+  [`phasefield5d`](https://github.com/nmmatters/phasefield5d).
 - Convex-hull / equilibrium-phase-diagram computation. Equilibrium tie-line
-  compositions are treated as an external input (see the bundled example's
+  compositions are treated as an external input (see the bundled scripts'
   hardcoded tie-line, sourced from `phase5d`'s published example composition);
   computing them from scratch is the job of a separate (currently
   unpublished) convex-hull toolkit.

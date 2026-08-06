@@ -6,7 +6,7 @@ import pytest
 from early5d import calphad
 
 DATA_PATH = os.path.join(
-    os.path.dirname(__file__), "..", "examples", "data", "tchea4_mobfe5_873k_alloy_stencils.dat"
+    os.path.dirname(__file__), "..", "data", "tchea4_mobfe5_873k_alloy_stencils.dat"
 )
 ELEMENTS = ["Mn", "Ni", "Co", "Cu"]
 ALLOY_1 = np.array([0.10, 0.20, 0.20, 0.30])

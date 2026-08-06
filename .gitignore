@@ -217,14 +217,17 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Raw CALPHAD / Thermo-Calc exports (proprietary, large — never commit)
+# Raw CALPHAD / Thermo-Calc exports (proprietary, large — never commit),
+# except the small, git-committed example extracts bundled in data/
 /data/*
-!/data/README.md
 *.dat
-!examples/data/*.dat
+!/data/README.md
+!/data/tchea4_mobfe5_873k_alloy_stencils.dat
+!/data/tchea4_mobfe5_873k_coarse5pct.dat
+!/data/tchea4_mobfe5_873k_equilibrium_phases.dat
 
-# Generated example output
-examples/output/
+# Generated analysis output
+analysis/output/
 *.png
 !media/*.png
 *.npz

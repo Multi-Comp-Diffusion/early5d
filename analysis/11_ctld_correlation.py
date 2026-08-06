@@ -7,11 +7,11 @@ show all five possible reference-species choices at once rather than just
 the paper's own (Fe) convention -- points consistently below the 1:1 line
 show tau_eff underestimating tau; how far below (and how that changes across
 reference-species choices) is exactly the gauge-dependence quantified in
-examples/09 and 10.
+analysis/09 and 10.
 
-Reuses examples/10's sweep if it already produced
-examples/output/composition_sweep.npz (fast); otherwise runs it fresh here
-(slow, several minutes -- see examples/10_composition_sweep_data.py's
+Reuses analysis/10's sweep if it already produced
+analysis/output/composition_sweep.npz (fast); otherwise runs it fresh here
+(slow, several minutes -- see analysis/10_composition_sweep_data.py's
 docstring).
 """
 

@@ -1,6 +1,6 @@
 """End-to-end per-composition analysis, bundling Secs. 2.1-2.4 into one call.
 
-Wires together the pipeline that :mod:`examples`' 02-05 scripts each repeat by
+Wires together the pipeline that :mod:`analysis`' 02-05 scripts each repeat by
 hand (Hessian and spinodal check, mobility matrix, thermo-kinetic dispersion
 relation and CTLD, single-mode effective projection, eigenmode bar-shard data,
 and -- given an equilibrium tie-line -- misalignment angles) for a single

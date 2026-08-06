@@ -16,7 +16,7 @@ are Table 2 of Marschall, Murugan & Darvishi Kamachali, Materialia 44 (2025)
 
 The mobility matrix needs no finite-difference neighbors (unlike the
 Hessian), so this only requires the exact CALPHAD row at each composition --
-bundled here as a small, separate 4-row data extract (examples/data/
+bundled here as a small, separate 4-row data extract (data/
 tchea4_mobfe5_873k_equilibrium_phases.dat) alongside the alloy stencils.
 """
 

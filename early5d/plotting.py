@@ -116,7 +116,7 @@ def plot_ctld_correlation(ax, tau_eff, tau, label=None, color=None, marker_size=
     CTLD-vs-effective-CTLD correlation plot from the manuscript's original
     analysis, generalized here to accept one series per reference-species
     choice (see :func:`plot_ctld_reference_line` for the accompanying 1:1
-    line, and ``examples/11_ctld_correlation.py`` for a full example).
+    line, and ``analysis/11_ctld_correlation.py`` for a full example).
     """
     tau_eff, tau = np.asarray(tau_eff, dtype=float), np.asarray(tau, dtype=float)
     finite = np.isfinite(tau_eff) & np.isfinite(tau) & (tau_eff > 0) & (tau > 0)

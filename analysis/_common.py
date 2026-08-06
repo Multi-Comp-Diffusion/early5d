@@ -1,4 +1,4 @@
-"""Shared constants for the example scripts (not part of the installed package).
+"""Shared constants for the analysis scripts (not part of the installed package).
 
 The two worked alloys and gradient-energy coefficient match the manuscript's
 Fe-Mn-Ni-Co-Cu case study at 873 K.
@@ -8,7 +8,8 @@ import os
 
 import numpy as np
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(REPO_ROOT, "data")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -44,7 +45,7 @@ EQUILIBRIUM_MODE = PHASE_A - PHASE_B  # tie-line direction, oblique Gibbs-space 
 # artifact of the paper's 2-decimal display precision that doesn't matter for
 # EQUILIBRIUM_MODE above (only ever used as an approximate tie-line
 # direction) but does matter for an *exact* CALPHAD row lookup (needed to
-# evaluate the mobility matrix there, examples/12): this is PHASE_B's
+# evaluate the mobility matrix there, analysis/12): this is PHASE_B's
 # nearest valid grid point (Cu 0.92 -> 0.91; Fe unaffected, still 0.00).
 PHASE_B_GRID = np.array([0.00, 0.03, 0.05, 0.01, 0.91])
 
