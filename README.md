@@ -2,11 +2,11 @@
 
 [![Tests](https://github.com/nmmatters/early5d/actions/workflows/tests.yml/badge.svg)](https://github.com/nmmatters/early5d/actions/workflows/tests.yml)
 
-**Phase stability analysis in complex High Entropy Alloys**
+**Phase stability analysis in complex multi-component alloys**
 
 `early5d` computes and analyzes the thermo-kinetic eigenproblem that governs the earliest
-stage of spinodal decomposition in a multi-component alloy. Early-stage analysis of the linearized 
-multi-component Cahn–Hilliard are performed. Starting directly
+stage of spinodal decomposition in a multi-component alloy such as the High Entropy Alloys (HEAs). 
+Early-stage analysis of the linearized multi-component Cahn–Hilliard are performed. Starting directly
 from CALPHAD thermodynamic and mobility data (Gibbs energy derivatives + 
 atomic mobilities on a composition grid), it builds the Gibbs-energy Hessian 
 and the Onsager mobility matrix, solves the thermo-kinetic growth operator, 
